@@ -1,0 +1,30 @@
+name: Build VirtualSteamVRDriver
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build
+        run: |
+          msbuild VirtualSteamVRDriver.sln /p:Configuration=Release /p:Platform=x64
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: VirtualSteamVRDriver-Release
+          path: |
+            **/Release/**
+            **/x64/Release/**
+            install_driver_Release.bat
